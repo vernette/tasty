@@ -318,16 +318,19 @@ class Api {
       method: "GET",
       headers: {
         ...this._headers,
+        authorization: `Token ${token}`,
       },
     }).then(this.checkResponse);
   }
 
   // tags
   getTags() {
+    const token = localStorage.getItem("token");
     return fetch(`/api/tags/`, {
       method: "GET",
       headers: {
         ...this._headers,
+        authorization: `Token ${token}`,
       },
     }).then(this.checkResponse);
   }
