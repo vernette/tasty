@@ -27,7 +27,7 @@ class Recipe(BaseModel):
         upload_to='recipes/images',
         null=False,
     )
-    description = models.TextField(
+    text = models.TextField(
         null=False
     )
     ingredients = models.ManyToManyField(
