@@ -2,6 +2,9 @@ version: '3.3'
 
 volumes:
   static:
+  sqlite_data:
+    driver: local
+  media:
 
 services:
   backend:
@@ -9,6 +12,8 @@ services:
     build: ../backend
     volumes:
       - static:/backend_static
+      - ../backend/foodgram/db.sqlite3:/app/foodgram/db.sqlite3
+      - media:/app/foodgram/media/
   
   frontend:
     container_name: foodgram-front
