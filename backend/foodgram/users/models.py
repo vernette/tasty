@@ -21,3 +21,12 @@ class CustomUser(AbstractUser):
         max_length=254,
         unique=True
     )
+
+
+class UserAvatar(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='avatar'
+    )
+    avatar = models.ImageField(upload_to='users/avatars', null=True, blank=True)
