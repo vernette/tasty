@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import LimitOffsetPagination
 
 from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
 from core.models import Ingredient, Tag, Recipe
@@ -20,4 +20,4 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = LimitOffsetPagination
