@@ -19,7 +19,7 @@ class UserAvatarSerializer(serializers.ModelSerializer):
         fields = ('avatar',)
 
 
-class CustomUserSerializer(UserSerializer):
+class BaseCustomUserSerializer(UserSerializer):
     avatar = serializers.SerializerMethodField()
 
     def get_avatar(self, obj):
@@ -30,4 +30,15 @@ class CustomUserSerializer(UserSerializer):
         return None
 
     class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ('avatar',)
+        model = CustomUser
+        fields = UserSerializer.Meta.fields + ('email', 'id', 'username', 'first_name', 'last_name', 'avatar')
+
+
+class CustomCurrentUserSerializer(BaseCustomUserSerializer):
+    class Meta(BaseCustomUserSerializer.Meta):
+        fields = BaseCustomUserSerializer.Meta.fields
+
+
+class CustomUserDetailSerializer(BaseCustomUserSerializer):
+    class Meta(BaseCustomUserSerializer.Meta):
+        fields = BaseCustomUserSerializer.Meta.fields

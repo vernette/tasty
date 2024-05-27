@@ -253,7 +253,7 @@ class Api {
   getUser({ id }) {
     const token = localStorage.getItem("token");
     const authorization = token ? { authorization: `Token ${token}` } : {};
-    return fetch(`/api/users/${id}/`, {
+    return fetch(`/api/auth/users/${id}/`, {
       method: "GET",
       headers: {
         ...this._headers,
