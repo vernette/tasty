@@ -1,0 +1,52 @@
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+from core.models import Recipe
+from core.utils import Base64ImageField
+from users.models import UserAvatar
+from subscriptions.models import Subscription
+
+
+User = get_user_model()
+
+
+class ShortRecipeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'recipes', 'recipes_count', 'avatar'
+        )
+
+    def get_recipes(self, obj):
+        recipes = Recipe.objects.filter(author=obj)
+        return ShortRecipeSerializer(recipes, many=True).data
+
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj).count()
+
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        user_avatar = UserAvatar.objects.filter(user=obj).last()
+        if user_avatar and user_avatar.avatar:
+            return request.build_absolute_uri(user_avatar.avatar.url)
+        return None
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Subscription.objects.filter(user=request.user, author=obj).exists()
+        return False
