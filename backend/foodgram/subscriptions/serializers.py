@@ -11,11 +11,17 @@ User = get_user_model()
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -32,8 +38,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes(self, obj):
+        request = self.context.get('request')
         recipes = Recipe.objects.filter(author=obj)
-        return ShortRecipeSerializer(recipes, many=True).data
+        return ShortRecipeSerializer(recipes, many=True, context={'request': request}).data
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()
