@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 
 from core.models import Recipe, RecipeIngredient, Ingredient, Tag
+from users.models import UserAvatar
 
 
 User = get_user_model()
@@ -31,7 +32,15 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'slug')
 
 
+class UserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAvatar
+        fields = ('avatar',)
+
+
 class AuthorSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -41,8 +50,15 @@ class AuthorSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             # 'is_subscribed',
-            # 'avatar',
+            'avatar'
         )
+
+    def get_avatar(self, obj):
+        if obj.avatar:
+            request = self.context.get('request')
+            avatar_url = obj.avatar.avatar.url
+            return request.build_absolute_uri(avatar_url)
+        return None
 
 
 class RecipeSerializer(serializers.ModelSerializer):
