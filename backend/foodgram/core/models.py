@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from shortuuidfield import ShortUUIDField
 
 
 User = get_user_model()
@@ -42,6 +43,10 @@ class Recipe(BaseModel):
     )
     cooking_time = models.IntegerField(
         null=False
+    )
+    short_link = ShortUUIDField(
+        editable=False,
+        unique=True,
     )
 
 
