@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'shortener.apps.ShortenerConfig',
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
