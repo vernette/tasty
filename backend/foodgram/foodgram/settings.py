@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'subscriptions.apps.SubscriptionsConfig',
     'favorites.apps.FavoritesConfig',
+    'shopping_list.apps.ShoppingListConfig',
 ]
 
 MIDDLEWARE = [
