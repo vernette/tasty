@@ -29,10 +29,67 @@ const Cart = ({ updateOrders, orders }) => {
     getRecipes()
   }, [])
 
-  const downloadDocument = () => {
-    api.downloadFile()
+  const downloadDocument = (format) => {
+    const filename = format === 'json' ? 'shopping_cart.json' : 'shopping_cart.txt';
+    api.downloadFile(format)
+      .then(response => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Ошибка при загрузке файла');
+        }
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        downloadFileFromUrl(url, filename);
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+      });
   }
 
+  const downloadFileFromUrl = (url, filename) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  const downloadTxtDocument = () => {
+    api.downloadTxtFile()
+      .then(response => {
+        if (response.ok) {
+          return response.blob().then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            downloadFileFromUrl(url, 'shopping_cart.txt');
+          });
+        } else {
+          throw new Error('Ошибка при загрузке файла');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+      });
+  }
+
+  const downloadJsonDocument = () => {
+    api.downloadJsonFile()
+      .then(response => {
+        if (response.ok) {
+          return response.blob().then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            downloadFileFromUrl(url, 'shopping_cart.json');
+          });
+        } else {
+          throw new Error('Ошибка при загрузке файла');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+      });
+  }
   return <Main>
     <Container className={styles.container}>
       <MetaTags>
@@ -47,10 +104,24 @@ const Cart = ({ updateOrders, orders }) => {
           handleRemoveFromCart={handleAddToCart}
           updateOrders={updateOrders}
         />
-        {orders > 0 && <Button
-          modifier='style_dark'
-          clickHandler={downloadDocument}
-        >Скачать список</Button>}
+        {orders > 0 && (
+          <div>
+            <p>Скачать список покупок:</p>
+            <Button
+              modifier='style_dark'
+              clickHandler={downloadTxtDocument}
+              style={{ marginRight: '10px' }}
+            >
+              txt
+            </Button>
+            <Button
+              modifier='style_dark'
+              clickHandler={downloadJsonDocument}
+            >
+              json
+            </Button>
+          </div>
+        )}
       </div>
     </Container>
   </Main>

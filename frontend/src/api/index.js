@@ -368,9 +368,20 @@ class Api {
     }).then(this.checkResponse);
   }
 
-  downloadFile() {
+  downloadTxtFile() {
     const token = localStorage.getItem("token");
     return fetch(`/api/recipes/download_shopping_cart/`, {
+      method: "GET",
+      headers: {
+        ...this._headers,
+        authorization: `Token ${token}`,
+      },
+    }).then(this.checkFileDownloadResponse);
+  }
+
+  downloadJsonFile() {
+    const token = localStorage.getItem("token");
+    return fetch(`/api/recipes/download_shopping_cart_json/`, {
       method: "GET",
       headers: {
         ...this._headers,
