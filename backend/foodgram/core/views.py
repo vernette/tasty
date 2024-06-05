@@ -1,6 +1,6 @@
 from shortener.models import Url
 from rest_framework import viewsets, status
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,7 +26,8 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    pagination_class = LimitOffsetPagination
+    pagination_class = PageNumberPagination
+    page_size_query_param = 'limit'
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
