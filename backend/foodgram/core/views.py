@@ -30,13 +30,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     filterset = self.filterset_class(self.request.GET, queryset=queryset, request=self.request)
-    #     if filterset.is_valid():
-    #         queryset = filterset.qs
-    #     return queryset
-
     @action(detail=True, methods=['get'], url_path='get-link')
     def get_link(self, request, pk=None):
         recipe = self.get_object()

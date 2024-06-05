@@ -57,3 +57,12 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return Subscription.objects.filter(user=request.user, author=obj).exists()
         return False
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+        recipes_limit = request.query_params.get('recipes_limit')
+        if recipes_limit:
+            recipes_limit = int(recipes_limit)
+            data['recipes'] = self.get_recipes(instance)[:recipes_limit]
+        return data
