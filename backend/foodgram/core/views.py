@@ -3,7 +3,10 @@ from rest_framework import viewsets, status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
+
+from .filters import RecipeFilter
 from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
 from core.models import Ingredient, Tag, Recipe
 
@@ -24,6 +27,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = LimitOffsetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     filterset = self.filterset_class(self.request.GET, queryset=queryset, request=self.request)
+    #     if filterset.is_valid():
+    #         queryset = filterset.qs
+    #     return queryset
 
     @action(detail=True, methods=['get'], url_path='get-link')
     def get_link(self, request, pk=None):
