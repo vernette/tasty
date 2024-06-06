@@ -6,7 +6,7 @@ from rest_framework import status
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
-from core.models import Recipe
+from core.models import Recipe, RecipeIngredient
 from .models import ShoppingCart
 
 
@@ -46,7 +46,7 @@ class DownloadShoppingCartTXTView(APIView):
             content += f"Рецепт: {recipe.name}\n"
             content += f"Ингредиенты:\n"
             for ingredient in recipe.ingredients.all():
-                amount = ingredient.recipeingredient_set.get(recipe=recipe).amount
+                amount = RecipeIngredient.objects.get(recipe=recipe, ingredient=ingredient).amount
                 content += f"- {ingredient.name} ({amount} {ingredient.measurement_unit})\n"
             content += "\n"
 
@@ -65,7 +65,7 @@ class DownloadShoppingCartJSONView(APIView):
         shopping_list = []
         for item in shopping_cart_items:
             recipe = item.recipe
-            ingredients_list = [{'name': ingredient.name, 'measurement_unit': ingredient.measurement_unit, 'amount': ingredient.recipeingredient_set.get(recipe=recipe).amount} for ingredient in recipe.ingredients.all()]
+            ingredients_list = [{'name': ingredient.name, 'measurement_unit': ingredient.measurement_unit, 'amount': RecipeIngredient.objects.get(recipe=recipe, ingredient=ingredient).amount} for ingredient in recipe.ingredients.all()]
             shopping_list.append({'recipe_name': recipe.name, 'ingredients': ingredients_list})
 
         response_data = json.dumps(shopping_list, ensure_ascii=False, indent=4)
