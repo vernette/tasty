@@ -54,7 +54,6 @@ class Ingredient(BaseModel):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         'Recipe',
-        related_name='recipe_ingredients',
         on_delete=models.CASCADE
     )
     ingredient = models.ForeignKey(
@@ -69,6 +68,7 @@ class RecipeIngredient(models.Model):
     )
 
     class Meta:
+        default_related_name = 'recipe_ingredients'
         unique_together = ['recipe', 'ingredient']
 
 
