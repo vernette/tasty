@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
 from core.models import Ingredient, Tag, Recipe
 
@@ -15,6 +15,8 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     pagination_class = None
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientFilter
 
 
 class TagViewSet(viewsets.ModelViewSet):
