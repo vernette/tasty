@@ -1,15 +1,21 @@
 import django_filters as filters
 
-from .models import Recipe
+from .models import Recipe, Tag
 
 
 class RecipeFilter(filters.FilterSet):
     is_favorited = filters.NumberFilter(method='filter_is_favorited')
     is_in_shopping_cart = filters.NumberFilter(method='filter_is_in_shopping_cart')
+    tags = filters.ModelMultipleChoiceFilter(
+        field_name='tags__slug',
+        to_field_name='slug',
+        queryset=Tag.objects.all(),
+        conjoined=False
+    )
 
     class Meta:
         model = Recipe
-        fields = ['is_favorited', 'is_in_shopping_cart']
+        fields = ['is_favorited', 'is_in_shopping_cart', 'tags']
 
     def filter_is_favorited(self, queryset, name, value):
         if value == 1:
