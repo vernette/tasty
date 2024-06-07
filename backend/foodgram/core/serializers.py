@@ -62,10 +62,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    # def create(self, validated_data):
-    #     request = self.context.get('request')
-    #     validated_data['author'] = request.user
-    #     return super().create(validated_data)
 
     def create(self, validated_data):
         request = self.context.get('request')
