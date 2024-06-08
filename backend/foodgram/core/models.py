@@ -44,6 +44,9 @@ class Recipe(BaseModel):
         null=False
     )
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Ingredient(BaseModel):
     measurement_unit = models.CharField(
