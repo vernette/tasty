@@ -1,4 +1,6 @@
 import json
+from collections import defaultdict
+from math import ceil
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -40,15 +42,18 @@ class DownloadShoppingCartTXTView(APIView):
         if not shopping_cart_items.exists():
             return Response({'errors': 'Your shopping cart is empty.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        content = ""
+        ingredients_dict = defaultdict(int)
+
         for item in shopping_cart_items:
             recipe = item.recipe
-            content += f"Рецепт: {recipe.name}\n"
-            content += f"Ингредиенты:\n"
             for ingredient in recipe.ingredients.all():
                 amount = RecipeIngredient.objects.get(recipe=recipe, ingredient=ingredient).amount
-                content += f"- {ingredient.name} ({amount} {ingredient.measurement_unit})\n"
-            content += "\n"
+                amount_int = int(ceil(amount))
+                ingredients_dict[(ingredient.name, ingredient.measurement_unit)] += amount_int
+
+        content = ""
+        for ingredient, amount in ingredients_dict.items():
+            content += f"{ingredient[0]} ({ingredient[1]}) — {amount}\n"
 
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename="shopping_cart.txt"'

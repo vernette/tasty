@@ -63,7 +63,7 @@ class RecipeIngredient(models.Model):
         'Ingredient',
         on_delete=models.CASCADE
     )
-    amount = models.FloatField(
+    amount = models.IntegerField(
         null=False
     )
     measurement_unit = models.CharField(
