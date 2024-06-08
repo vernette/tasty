@@ -4,6 +4,7 @@ from .models import Recipe, Tag, Ingredient
 
 
 class RecipeFilter(filters.FilterSet):
+    author = filters.NumberFilter(field_name='author__id', lookup_expr='exact')
     is_favorited = filters.NumberFilter(method='filter_is_favorited')
     is_in_shopping_cart = filters.NumberFilter(method='filter_is_in_shopping_cart')
     tags = filters.ModelMultipleChoiceFilter(
@@ -15,7 +16,7 @@ class RecipeFilter(filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['is_favorited', 'is_in_shopping_cart', 'tags']
+        fields = ['author', 'is_favorited', 'is_in_shopping_cart', 'tags']
 
     def filter_is_favorited(self, queryset, name, value):
         if value == 1:
