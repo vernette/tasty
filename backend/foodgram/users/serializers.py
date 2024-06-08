@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import NotAuthenticated
 from djoser.serializers import UserCreateSerializer, UserSerializer
 
 from .models import CustomUser, UserAvatar
@@ -9,7 +10,7 @@ from core.serializers import Base64ImageField
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name', 'password')
+        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'password')
 
 
 class UserAvatarSerializer(serializers.ModelSerializer):
@@ -49,6 +50,12 @@ class BaseCustomUserSerializer(UserSerializer):
 class CustomCurrentUserSerializer(BaseCustomUserSerializer):
     class Meta(BaseCustomUserSerializer.Meta):
         fields = BaseCustomUserSerializer.Meta.fields
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        if not request.user.is_authenticated:
+            raise NotAuthenticated('Authentication credentials were not provided.')
+        return super().to_representation(instance)
 
 
 class CustomUserDetailSerializer(BaseCustomUserSerializer):

@@ -67,12 +67,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -135,12 +136,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -203,12 +205,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -393,12 +396,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -441,12 +445,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -489,12 +494,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -537,12 +543,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -585,12 +592,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -632,12 +640,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -679,12 +688,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -726,12 +736,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -773,12 +784,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -820,12 +832,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -867,12 +880,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -914,12 +928,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -1287,12 +1302,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -1372,12 +1388,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/",
+									"raw": "{{baseUrl}}/api/auth/users/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									]
@@ -1469,12 +1486,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/?limit=1",
+									"raw": "{{baseUrl}}/api/auth/users/?limit=1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										""
 									],
@@ -1531,12 +1549,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{userId}}/",
+									"raw": "{{baseUrl}}/api/auth/users/{{userId}}/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"{{userId}}",
 										""
@@ -1600,12 +1619,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{userId}}/",
+									"raw": "{{baseUrl}}/api/auth/users/{{userId}}/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"{{userId}}",
 										""
@@ -1683,12 +1703,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/",
+									"raw": "{{baseUrl}}/api/auth/users/me/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"me",
 										""
@@ -1761,7 +1782,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/avatar/",
+									"raw": "{{baseUrl}}/api/auth/users/me/avatar/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -1838,12 +1859,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/",
+									"raw": "{{baseUrl}}/api/auth/users/me/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"me",
 										""
@@ -1904,12 +1926,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/set_password/",
+									"raw": "{{baseUrl}}/api/auth/users/set_password/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"set_password",
 										""
@@ -1938,7 +1961,7 @@
 											"pm.test(\"Статус-код ответа должен быть 200\", function () {",
 											"    pm.expect(",
 											"        pm.response.status,",
-											"        \"Убедитесь, что после изменения пароля через запрос к `api/users/set_password/`, запроc на получение токена с новым паролем возвращает ответ со статусом 200\"",
+											"        \"Убедитесь, что после изменения пароля через запрос к `api/auth/users/set_password/`, запроc на получение токена с новым паролем возвращает ответ со статусом 200\"",
 											"    ).to.be.eql(\"OK\");",
 											"});",
 											"pm.test('Структура ответа соответствует ожидаемой', function () {",
@@ -2031,12 +2054,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/set_password/",
+									"raw": "{{baseUrl}}/api/auth/users/set_password/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"set_password",
 										""
@@ -2149,12 +2173,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/",
+									"raw": "{{baseUrl}}/api/auth/users/me/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"me",
 										""
@@ -2173,7 +2198,7 @@
 											"pm.test(\"Статус-код ответа должен быть 404\", function () {",
 											"    pm.expect(",
 											"        pm.response.status,",
-											"        \"Запрос к `/api/users/{userId}/` с `id` несуществующего пользователя должен вернуть ответ со статус-кодом 404\"",
+											"        \"Запрос к `/api/auth/users/{userId}/` с `id` несуществующего пользователя должен вернуть ответ со статус-кодом 404\"",
 											"    ).to.be.eql(\"Not Found\");",
 											"});",
 											""
@@ -2201,12 +2226,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/9876/",
+									"raw": "{{baseUrl}}/api/auth/users/9876/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"9876",
 										""
@@ -2261,12 +2287,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/set_password/",
+									"raw": "{{baseUrl}}/api/auth/users/set_password/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"set_password",
 										""
@@ -2301,7 +2328,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/avatar/",
+									"raw": "{{baseUrl}}/api/auth/users/me/avatar/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -2351,7 +2378,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/avatar/",
+									"raw": "{{baseUrl}}/api/auth/users/me/avatar/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -2412,7 +2439,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/avatar/",
+									"raw": "{{baseUrl}}/api/auth/users/me/avatar/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -2470,7 +2497,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/avatar/",
+									"raw": "{{baseUrl}}/api/auth/users/me/avatar/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -2547,12 +2574,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/me/",
+									"raw": "{{baseUrl}}/api/auth/users/me/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"api",
+                    "auth",
 										"users",
 										"me",
 										""
@@ -8005,7 +8033,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8104,7 +8132,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{secondUserId}}/subscribe/?recipes_limit=2",
+									"raw": "{{baseUrl}}/api/auth/users/{{secondUserId}}/subscribe/?recipes_limit=2",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8220,7 +8248,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/subscriptions/",
+									"raw": "{{baseUrl}}/api/auth/users/subscriptions/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8335,7 +8363,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/subscriptions/?limit=1",
+									"raw": "{{baseUrl}}/api/auth/users/subscriptions/?limit=1",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8458,7 +8486,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/subscriptions/?recipes_limit=2",
+									"raw": "{{baseUrl}}/api/auth/users/subscriptions/?recipes_limit=2",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8508,7 +8536,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8560,7 +8588,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8612,7 +8640,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{userId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{userId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -8664,7 +8692,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/9876/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/9876/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -9896,7 +9924,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+											"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -9948,7 +9976,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+											"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -10000,7 +10028,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/users/9876/subscribe/",
+											"raw": "{{baseUrl}}/api/auth/users/9876/subscribe/",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -10054,7 +10082,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{thirdUserId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{thirdUserId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -10106,7 +10134,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/users/{{secondUserId}}/subscribe/",
+									"raw": "{{baseUrl}}/api/auth/users/{{secondUserId}}/subscribe/",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -11039,7 +11067,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://127.0.0.1:8000",
+			"value": "http://localhost",
 			"type": "string"
 		},
 		{
