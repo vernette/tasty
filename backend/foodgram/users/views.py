@@ -13,12 +13,11 @@ class AvatarView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         return UserAvatar.objects.get_or_create(user=self.request.user)[0]
 
-    def patch(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         profile_image = self.get_object()
         serializer = self.get_serializer(
             profile_image,
-            data=request.data,
-            partial=True
+            data=request.data
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
