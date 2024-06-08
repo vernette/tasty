@@ -26,6 +26,9 @@ class BaseCustomUserSerializer(UserSerializer):
 
     def get_avatar(self, obj):
         request = self.context.get('request')
+        if not request:
+            return None
+
         user_avatar = UserAvatar.objects.filter(user=obj).last()
         if user_avatar and user_avatar.avatar:
             return request.build_absolute_uri(user_avatar.avatar.url)
