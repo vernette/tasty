@@ -60,6 +60,7 @@ class DownloadShoppingCartTXTView(APIView):
         return response
 
 
+# TODO Изменить вывод
 class DownloadShoppingCartJSONView(APIView):
     def get(self, request):
         shopping_cart_items = ShoppingCart.objects.filter(user=request.user).select_related('recipe')
