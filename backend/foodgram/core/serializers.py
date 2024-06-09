@@ -75,11 +75,25 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 f"Duplicate ingredients found: {', '.join(map(str, duplicate_ingredients))}")
 
+        tags_data = self.context['request'].data.get('tags')
+        if not tags_data:
+            raise serializers.ValidationError("Tags data is required.")
+
+        duplicate_tags = [id for id, count in Counter(tags_data).items() if count > 1]
+        if duplicate_tags:
+            raise serializers.ValidationError(
+                f"Duplicate tags found: {', '.join(map(str, duplicate_tags))}")
+
         for ingredient_data in ingredients_data:
             ingredient_id = ingredient_data.get('id')
             if not Ingredient.objects.filter(id=ingredient_id).exists():
                 raise serializers.ValidationError(
                     f"Ingredient with id {ingredient_id} does not exist.")
+
+        for tag_id in tags_data:
+            if not Tag.objects.filter(id=tag_id).exists():
+                raise serializers.ValidationError(
+                    f"Tag with id {tag_id} does not exist.")
 
         return attrs
 
