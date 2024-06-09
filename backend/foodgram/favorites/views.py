@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404
 
 from core.models import Recipe
 from favorites.models import Favorite
-from core.serializers import RecipeSerializer
 
 
 class RecipeFavoriteAPIView(APIView):
