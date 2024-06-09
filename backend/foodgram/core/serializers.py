@@ -62,6 +62,17 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
+    def validate(self, attrs):
+        ingredients_data = self.context['request'].data.get('ingredients')
+        if not ingredients_data:
+            raise serializers.ValidationError("Ingredients data is required.")
+
+        for ingredient_data in ingredients_data:
+            ingredient_id = ingredient_data.get('id')
+            if not Ingredient.objects.filter(id=ingredient_id).exists():
+                raise serializers.ValidationError(
+                    f"Ingredient with id {ingredient_id} does not exist.")
+        return attrs
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -70,6 +81,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         validated_data.pop('recipe_ingredients', None)
         validated_data['author'] = request.user
+
         recipe = super().create(validated_data)
 
         if tags_data:
@@ -82,6 +94,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredient = Ingredient.objects.get(id=ingredient_id)
             RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, amount=amount,
                                             measurement_unit=ingredient.measurement_unit)
+
         return recipe
 
     def update(self, instance, validated_data):
@@ -89,25 +102,26 @@ class RecipeSerializer(serializers.ModelSerializer):
         tags_data = request.data.get('tags')
         ingredients_data = request.data.get('ingredients')
 
-        validated_data.pop('recipe_ingredients', None)
+        validated_data.pop('ingredients', None)
         instance = super().update(instance, validated_data)
+
+        if ingredients_data is None:
+            raise serializers.ValidationError("Ingredients data is required.")
 
         if tags_data:
             tags = Tag.objects.filter(id__in=tags_data)
             instance.tags.set(tags)
 
-        if ingredients_data:
-            instance.recipe_ingredients.all().delete()
-            for ingredient_data in ingredients_data:
-                ingredient_id = ingredient_data.get('id')
-                amount = ingredient_data.get('amount')
-                ingredient = Ingredient.objects.get(id=ingredient_id)
-                RecipeIngredient.objects.create(
-                    recipe=instance,
-                    ingredient=ingredient,
-                    amount=amount,
-                    measurement_unit=ingredient.measurement_unit
-                )
+        for ingredient_data in ingredients_data:
+            ingredient_id = ingredient_data.get('id')
+            amount = ingredient_data.get('amount')
+            ingredient = Ingredient.objects.get(id=ingredient_id)
+            RecipeIngredient.objects.create(
+                recipe=instance,
+                ingredient=ingredient,
+                amount=amount,
+                measurement_unit=ingredient.measurement_unit
+            )
 
         return instance
 

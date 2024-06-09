@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -40,9 +41,7 @@ class Recipe(BaseModel):
         'Tag',
         related_name='recipes'
     )
-    cooking_time = models.IntegerField(
-        null=False
-    )
+    cooking_time = models.PositiveSmallIntegerField()
 
     class Meta:
         ordering = ['-id']
@@ -63,8 +62,11 @@ class RecipeIngredient(models.Model):
         'Ingredient',
         on_delete=models.CASCADE
     )
-    amount = models.IntegerField(
-        null=False
+    amount = models.PositiveSmallIntegerField(
+        validators=(
+            MinValueValidator(1, "Минимальное число ингредиентов - 1"),
+            MaxValueValidator(100, "Максимальное число ингредиентов - 100"),
+        ),
     )
     measurement_unit = models.CharField(
         max_length=64  # TODO Change max_length later
