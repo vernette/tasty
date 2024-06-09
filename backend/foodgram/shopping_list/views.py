@@ -13,6 +13,9 @@ from .models import ShoppingCart
 
 
 class RecipeShoppingCartAPIView(APIView):
+    def get_serializer_context(self):
+        return {'request': self.request}
+
     def post(self, request, id):
         recipe = get_object_or_404(Recipe, id=id)
         shopping_cart, created = ShoppingCart.objects.get_or_create(user=request.user, recipe=recipe)
@@ -24,7 +27,7 @@ class RecipeShoppingCartAPIView(APIView):
                 "cooking_time": recipe.cooking_time
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
-        return Response({'message': 'Recipe already in shopping cart.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Recipe already in shopping cart.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
         recipe = get_object_or_404(Recipe, id=id)
