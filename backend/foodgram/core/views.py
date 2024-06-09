@@ -5,13 +5,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-
+from .mixins import ReadOnlyOrAdminMixin
 from .filters import RecipeFilter, IngredientFilter
 from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
 from core.models import Ingredient, Tag, Recipe
 
 
-class IngredientViewSet(viewsets.ModelViewSet):
+class IngredientViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     pagination_class = None
@@ -19,7 +19,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     filterset_class = IngredientFilter
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     pagination_class = None
