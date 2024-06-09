@@ -1,15 +1,20 @@
-from shortener.models import Url
-from rest_framework import viewsets, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
+from shortener.models import Url
 
-from .permissions import IsOwnerOrAdminOrReadOnly, IsAuthenticatedAndReadOnly
-from .pagination import CustomPageNumberPagination
-from .mixins import ReadOnlyOrAdminMixin
-from .filters import RecipeFilter, IngredientFilter
-from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
-from core.models import Ingredient, Tag, Recipe
+from core.models import Ingredient, Recipe, Tag
+from core.serializers import (
+    IngredientSerializer, RecipeSerializer, TagSerializer
+)
+
+from core.filters import IngredientFilter, RecipeFilter
+from core.mixins import ReadOnlyOrAdminMixin
+from core.pagination import CustomPageNumberPagination
+from core.permissions import (
+    IsAuthenticatedAndReadOnly, IsOwnerOrAdminOrReadOnly
+)
 
 
 class IngredientViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
@@ -30,7 +35,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = CustomPageNumberPagination
-    permission_classes = [IsOwnerOrAdminOrReadOnly, IsAuthenticatedAndReadOnly]
+    permission_classes = [
+        IsOwnerOrAdminOrReadOnly,
+        IsAuthenticatedAndReadOnly
+    ]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
@@ -40,4 +48,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         long_url = request.build_absolute_uri(f'/recipes/{recipe.pk}/')
         short_url, _ = Url.objects.get_or_create(long_url=long_url)
         short_link = request.build_absolute_uri(f'/s/{short_url.short_id}/')
-        return Response({'short-link': short_link}, status=status.HTTP_200_OK)
+        return Response(
+            {'short-link': short_link},
+            status=status.HTTP_200_OK
+        )
