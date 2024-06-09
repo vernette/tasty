@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from core.models import Recipe, RecipeIngredient, Ingredient, Tag
 from users.models import UserAvatar
-from .utils import Base64ImageField
+from core.utils import Base64ImageField
 from users.serializers import BaseCustomUserSerializer
 
 
@@ -69,6 +69,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients_data = self.context['request'].data.get('ingredients')
         if not ingredients_data:
             raise serializers.ValidationError("Ingredients data is required.")
+
+        for ingredient in ingredients_data:
+            amount = ingredient.get('amount')
+            if not amount or amount == 0:
+                raise serializers.ValidationError("Amount cannot be 0.")
+
+        cooking_time = self.context['request'].data.get('cooking_time')
+        if not cooking_time or cooking_time == 0:
+            raise serializers.ValidationError("Cooking time cannot be 0.")
 
         ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
         duplicate_ingredients = [id for id, count in Counter(ingredient_ids).items() if count > 1]
