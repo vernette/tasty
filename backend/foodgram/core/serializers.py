@@ -1,3 +1,5 @@
+from collections import Counter
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -67,11 +69,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         if not ingredients_data:
             raise serializers.ValidationError("Ingredients data is required.")
 
+        ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
+        duplicate_ingredients = [id for id, count in Counter(ingredient_ids).items() if count > 1]
+        if duplicate_ingredients:
+            raise serializers.ValidationError(
+                f"Duplicate ingredients found: {', '.join(map(str, duplicate_ingredients))}")
+
         for ingredient_data in ingredients_data:
             ingredient_id = ingredient_data.get('id')
             if not Ingredient.objects.filter(id=ingredient_id).exists():
                 raise serializers.ValidationError(
                     f"Ingredient with id {ingredient_id} does not exist.")
+
         return attrs
 
     def create(self, validated_data):
