@@ -1,10 +1,10 @@
 from shortener.models import Url
 from rest_framework import viewsets, status
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
+from .pagination import CustomPageNumberPagination
 from .mixins import ReadOnlyOrAdminMixin
 from .filters import RecipeFilter, IngredientFilter
 from core.serializers import IngredientSerializer, TagSerializer, RecipeSerializer
@@ -28,8 +28,7 @@ class TagViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    pagination_class = PageNumberPagination
-    page_size_query_param = 'limit'
+    pagination_class = CustomPageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
