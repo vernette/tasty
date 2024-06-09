@@ -136,6 +136,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         if ingredients_data is None:
             raise serializers.ValidationError("Ingredients data is required.")
 
+        instance.recipe_ingredients.all().delete()
+
         if tags_data:
             tags = Tag.objects.filter(id__in=tags_data)
             instance.tags.set(tags)
