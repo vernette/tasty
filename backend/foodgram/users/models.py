@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class CustomUser(AbstractUser):
@@ -29,4 +29,8 @@ class UserAvatar(models.Model):
         on_delete=models.CASCADE,
         related_name='avatar'
     )
-    avatar = models.ImageField(upload_to='users/avatars', null=True, blank=True)
+    avatar = models.ImageField(
+        upload_to='users/avatars',
+        null=True,
+        blank=True
+    )
