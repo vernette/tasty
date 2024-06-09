@@ -12,13 +12,19 @@ User = get_user_model()
 
 
 class SubscribeView(views.APIView):
+    def get_serializer_context(self):
+        return {'request': self.request}
 
     def post(self, request, id):
         author = get_object_or_404(User, id=id)
         if request.user == author:
             return Response({'error': 'You cannot subscribe to yourself'}, status=status.HTTP_400_BAD_REQUEST)
+        subscription = Subscription.objects.filter(user=request.user, author=author)
+        if subscription.exists():
+            return Response({'error': 'Subscription already exists'}, status=status.HTTP_400_BAD_REQUEST)
         Subscription.objects.get_or_create(user=request.user, author=author)
-        return Response(status=status.HTTP_201_CREATED)
+        serializer = SubscriptionSerializer(author, context=self.get_serializer_context())
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
         author = get_object_or_404(User, id=id)
