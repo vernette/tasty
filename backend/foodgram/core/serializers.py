@@ -1,5 +1,6 @@
 from collections import Counter
 
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -103,6 +104,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients_data = request.data.get('ingredients')
 
         validated_data.pop('recipe_ingredients', None)
+
+        if not request.user.is_authenticated:
+            raise AuthenticationFailed("You must be authenticated to create a recipe.")
+
         validated_data['author'] = request.user
 
         recipe = super().create(validated_data)

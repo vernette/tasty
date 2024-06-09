@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrAdminOrReadOnly, IsAuthenticatedAndReadOnly
 from .pagination import CustomPageNumberPagination
 from .mixins import ReadOnlyOrAdminMixin
 from .filters import RecipeFilter, IngredientFilter
@@ -30,7 +30,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = CustomPageNumberPagination
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrAdminOrReadOnly, IsAuthenticatedAndReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
