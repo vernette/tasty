@@ -23,11 +23,9 @@ class RecipeFilter(filters.FilterSet):
             'is_favorited': 'favorites__user',
             'is_in_shopping_cart': 'in_shopping_cart__user'
         }
-
-        filter_kwargs = {
-            field_mapping.get(name): self.request.user.id
-        }
-        return queryset.filter(**filter_kwargs) if value == 1 else queryset.exclude(**filter_kwargs)
+        filter_kwargs = {field_mapping.get(name): self.request.user.id}
+        return (queryset.filter(**filter_kwargs) if value == 1
+                else queryset.exclude(**filter_kwargs))
 
 
 class IngredientFilter(filters.FilterSet):
