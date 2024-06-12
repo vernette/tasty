@@ -19,19 +19,14 @@ class RecipeFilter(filters.FilterSet):
         fields = ['author', 'is_favorited', 'is_in_shopping_cart', 'tags']
 
     def filter_by_user_related_field(self, queryset, name, value):
-        if not (self.request.user.is_authenticated and isinstance(self.request.user.id, int)):
-            return queryset
-
         field_mapping = {
             'is_favorited': 'favorites__user',
             'is_in_shopping_cart': 'in_shopping_cart__user'
         }
 
-        field = field_mapping.get(name)
-        if not field:
-            return queryset
-
-        filter_kwargs = {field: self.request.user.id}
+        filter_kwargs = {
+            field_mapping.get(name): self.request.user.id
+        }
         return queryset.filter(**filter_kwargs) if value == 1 else queryset.exclude(**filter_kwargs)
 
 
