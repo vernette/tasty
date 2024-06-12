@@ -26,10 +26,12 @@ class CustomUser(AbstractUser):
 class UserAvatar(models.Model):
     user = models.OneToOneField(
         CustomUser,
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
         related_name='avatar'
     )
     avatar = models.ImageField(
+        'Файл аватара',
         upload_to='users/avatars',
         null=True,
         blank=True
