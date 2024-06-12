@@ -10,11 +10,13 @@ User = get_user_model()
 class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
+        verbose_name='Пользователь',
         related_name='shopping_cart',
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепт',
         related_name='in_shopping_cart',
         on_delete=models.CASCADE
     )

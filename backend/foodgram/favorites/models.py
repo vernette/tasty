@@ -10,11 +10,13 @@ User = get_user_model()
 class Favorite(models.Model):
     user = models.ForeignKey(
         User,
+        verbose_name='Пользователь',
         related_name='favorites',
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепт',
         related_name='favorites',
         on_delete=models.CASCADE
     )
