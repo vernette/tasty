@@ -5,8 +5,12 @@ from .models import Recipe, Tag, Ingredient
 
 class RecipeFilter(filters.FilterSet):
     author = filters.NumberFilter(field_name='author__id', lookup_expr='exact')
-    is_favorited = filters.NumberFilter(method='filter_by_user_related_field')
-    is_in_shopping_cart = filters.NumberFilter(method='filter_by_user_related_field')
+    is_favorited = filters.NumberFilter(
+        method='filter_by_user_related_field'
+    )
+    is_in_shopping_cart = filters.NumberFilter(
+        method='filter_by_user_related_field'
+    )
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',
