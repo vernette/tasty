@@ -4,27 +4,29 @@ import csv
 from django.core.management.base import BaseCommand, CommandError
 
 from core.models import Ingredient
+from foodgram.constants import (
+    IMPORT_INGREDIENTS_FROM_CSV, CSV_FILE_PATH, IMPORT_SUCCESS,
+    INGREDIENT_EXISTS, FILE_DOES_NOT_EXIST
+)
 
 
 class Command(BaseCommand):
-    help = 'Import ingredients from CSV file'
+    help = IMPORT_INGREDIENTS_FROM_CSV
 
     def add_arguments(self, parser):
-        parser.add_argument('file_path', type=str, help='Path to the CSV file containing ingredients')
+        parser.add_argument('file_path', type=str, help=CSV_FILE_PATH)
 
     def handle(self, *args, **options):
         file_path = options['file_path']
 
         if not os.path.exists(file_path):
-            raise CommandError(f'File "{file_path}" does not exist')
+            raise CommandError(
+                FILE_DOES_NOT_EXIST.format(file_path=file_path)
+            )
 
         with open(file_path, 'r', encoding='utf-8') as file:
             reader = csv.reader(file)
             for row in reader:
-                if len(row) != 2:
-                    self.stdout.write(self.style.WARNING(f'Skipping invalid row: {row}'))
-                    continue
-
                 name, measurement_unit = row
                 ingredient, created = Ingredient.objects.get_or_create(
                     name=name,
@@ -32,6 +34,14 @@ class Command(BaseCommand):
                 )
 
                 if created:
-                    self.stdout.write(self.style.SUCCESS(f'Ingredient "{name}" created successfully'))
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            IMPORT_SUCCESS.format(name=name)
+                        )
+                    )
                     continue
-                self.stdout.write(self.style.WARNING(f'Ingredient "{name}" already exists'))
+                self.stdout.write(
+                    self.style.WARNING(
+                        INGREDIENT_EXISTS.format(name=name)
+                    )
+                )

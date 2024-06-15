@@ -14,7 +14,12 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )
 
     def get_image(self, obj):
         request = self.context.get('request')
@@ -32,8 +37,15 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email', 'id', 'username', 'first_name', 'last_name',
-            'is_subscribed', 'recipes', 'recipes_count', 'avatar'
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+            'avatar'
         )
 
     def get_recipes(self, obj):

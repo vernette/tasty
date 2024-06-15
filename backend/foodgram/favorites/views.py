@@ -1,10 +1,11 @@
 from core.models import Recipe
 from shopping_list.views import BaseRecipeAPIView
 from favorites.models import Favorite
+from foodgram.constants import FAVORITES_NOT_FOUND, FAVORITES_ALREADY_EXISTS
 
 
 class RecipeFavoriteAPIView(BaseRecipeAPIView):
     main_model = Recipe
     related_model = Favorite
-    create_message = 'Рецепт уже в избранном.'
-    not_found_message = 'Рецепта нет в избранном.'
+    exists_message = FAVORITES_ALREADY_EXISTS
+    not_found_message = FAVORITES_NOT_FOUND

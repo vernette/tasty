@@ -1,11 +1,16 @@
-import json
 from collections import defaultdict
 from math import ceil
 
 from django.http import HttpResponse
 from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
 
 from core.models import Recipe, RecipeIngredient
+from foodgram.constants import (
+    SHOPPING_LIST_ALREADY_EXISTS, SHOPPING_LIST_NOT_FOUND,
+    SHOPPING_LIST_TXT_FILENAME
+)
 from foodgram.utils import (
     delete_object, get_or_create_object, get_user_shopping_cart_items
 )
@@ -15,15 +20,14 @@ from shopping_list.models import ShoppingCart
 def get_user_items(request):
     return get_user_shopping_cart_items(
         ShoppingCart,
-        request.user,
-        'Your shopping cart is empty.'
+        request.user
     )
 
 
 class BaseRecipeAPIView(APIView):
     main_model = None
     related_model = None
-    create_message = ''
+    exists_message = ''
     not_found_message = ''
 
     def post(self, request, id):
@@ -33,10 +37,13 @@ class BaseRecipeAPIView(APIView):
             request.user,
             request,
             id,
-            self.create_message
+            self.exists_message
         )
 
     def delete(self, request, id):
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         return delete_object(
             self.main_model,
             self.related_model,
@@ -49,8 +56,8 @@ class BaseRecipeAPIView(APIView):
 class RecipeShoppingCartAPIView(BaseRecipeAPIView):
     main_model = Recipe
     related_model = ShoppingCart
-    create_message = 'Recipe already in shopping cart.'
-    not_found_message = 'Recipe not found in shopping cart.'
+    exists_message = SHOPPING_LIST_ALREADY_EXISTS
+    not_found_message = SHOPPING_LIST_NOT_FOUND
 
 
 class DownloadShoppingCartTXTView(APIView):
@@ -79,43 +86,6 @@ class DownloadShoppingCartTXTView(APIView):
             content += f"{ingredient[0]} ({ingredient[1]}) — {amount}\n"
 
         response = HttpResponse(content, content_type='text/plain')
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_cart.txt"')
-        return response
-
-
-class DownloadShoppingCartJSONView(APIView):
-    def get(self, request):
-        shopping_cart_items = get_user_items(request)
-
-        shopping_list = []
-        for item in shopping_cart_items:
-            recipe = item.recipe
-            ingredients_list = [
-                {
-                    'name': ingredient.name,
-                    'measurement_unit': ingredient.measurement_unit,
-                    'amount': RecipeIngredient.objects.get(
-                        recipe=recipe, ingredient=ingredient
-                    ).amount
-                } for ingredient in recipe.ingredients.all()
-            ]
-            shopping_list.append(
-                {
-                    'recipe_name': recipe.name,
-                    'ingredients': ingredients_list
-                }
-            )
-
-        response_data = json.dumps(
-            shopping_list,
-            ensure_ascii=False,
-            indent=4
-        )
-        response = HttpResponse(
-            response_data,
-            content_type='application/json'
-        )
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_cart.json"')
+        response['Content-Disposition'] = (f'attachment; '
+                                           f'filename="{SHOPPING_LIST_TXT_FILENAME}"')
         return response

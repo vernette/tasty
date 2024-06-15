@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status, serializers
 from rest_framework.response import Response
 
+from foodgram.constants import SHOPPING_LIST_EMPTY
+
 
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
@@ -40,21 +42,18 @@ def delete_object(main_model, related_model, user, id, not_found_message):
     instance = related_model.objects.filter(user=user, recipe=obj).first()
     if instance:
         instance.delete()
-        return Response(
-            {'message': 'Removed successfully.'},
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
     return Response({
         'errors': not_found_message},
         status=status.HTTP_400_BAD_REQUEST
     )
 
 
-def get_user_shopping_cart_items(model, user, empty_message):
+def get_user_shopping_cart_items(model, user):
     items = model.objects.filter(user=user).select_related('recipe')
     if not items.exists():
         return Response(
-            {'errors': empty_message},
+            {'errors': SHOPPING_LIST_EMPTY},
             status=status.HTTP_400_BAD_REQUEST
         )
     return items

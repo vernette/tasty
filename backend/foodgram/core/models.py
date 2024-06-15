@@ -1,6 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from foodgram.constants import (
+    NAME_MAX_LENGTH, MEASUREMENT_UNIT_MAX_LENGTH
+)
+
 
 User = get_user_model()
 
@@ -8,7 +12,7 @@ User = get_user_model()
 class BaseModel(models.Model):
     name = models.CharField(
         'Название',
-        max_length=256
+        max_length=NAME_MAX_LENGTH
     )
 
     def __str__(self):
@@ -57,7 +61,7 @@ class Recipe(BaseModel):
 class Ingredient(BaseModel):
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
-        max_length=64  # TODO Change max_length later
+        max_length=MEASUREMENT_UNIT_MAX_LENGTH
     )
 
     class Meta:

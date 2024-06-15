@@ -4,8 +4,12 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .serializers import SubscriptionSerializer
-from .models import Subscription
+from foodgram.constants import (
+    SELF_SUBSCRIPTION_ERROR, SUBSCRIPTION_ALREADY_EXISTS,
+    SUBSCRIPTION_NOT_FOUND
+)
+from subscriptions.serializers import SubscriptionSerializer
+from subscriptions.models import Subscription
 
 
 User = get_user_model()
@@ -26,7 +30,7 @@ class SubscribeView(views.APIView):
         author = get_object_or_404(User, id=id)
         if request.user == author:
             return Response(
-                {'error': 'You cannot subscribe to yourself'},
+                {'error': SELF_SUBSCRIPTION_ERROR},
                 status=status.HTTP_400_BAD_REQUEST
             )
         subscription = get_subscription(
@@ -35,7 +39,7 @@ class SubscribeView(views.APIView):
         )
         if subscription.exists():
             return Response(
-                {'error': 'Subscription already exists'},
+                {'error': SUBSCRIPTION_ALREADY_EXISTS},
                 status=status.HTTP_400_BAD_REQUEST
             )
         Subscription.objects.get_or_create(
@@ -57,7 +61,7 @@ class SubscribeView(views.APIView):
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
-            {'error': 'Subscription does not exist'},
+            {'error': SUBSCRIPTION_NOT_FOUND},
              status=status.HTTP_400_BAD_REQUEST
         )
 

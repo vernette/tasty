@@ -2,8 +2,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 from djoser.serializers import UserCreateSerializer, UserSerializer
 
-from .models import CustomUser, UserAvatar
+from users.models import CustomUser, UserAvatar
 from subscriptions.models import Subscription
+from foodgram.constants import NOT_AUTHENTICATED
 from foodgram.utils import Base64ImageField
 
 
@@ -69,9 +70,7 @@ class CustomCurrentUserSerializer(BaseCustomUserSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         if not request.user.is_authenticated:
-            raise NotAuthenticated(
-                'Authentication credentials were not provided.'
-            )
+            raise NotAuthenticated(NOT_AUTHENTICATED)
         return super().to_representation(instance)
 
 
