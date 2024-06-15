@@ -3,10 +3,13 @@ NAME_MAX_LENGTH: int = 256
 MEASUREMENT_UNIT_MAX_LENGTH: int = 64
 
 # Core
-INGREDIENTS_DATA_REQUIRED: str = 'Ингредиенты обязательны для создания рецепта.'
+INGREDIENTS_DATA_REQUIRED: str = ('Ингредиенты '
+                                  'обязательны для создания рецепта.')
 TAGS_DATA_REQUIRED: str = 'Теги обязательны для создания рецепта.'
-AMOUNT_REQUIRED: str = 'Количество ингредиента обязательно для создания рецепта.'
-COOKING_TIME_REQUIRED: str = 'Время приготовления рецепта обязательно для создания рецепта.'
+AMOUNT_REQUIRED: str = ('Количество ингредиента '
+                        'обязательно для создания рецепта.')
+COOKING_TIME_REQUIRED: str = ('Время приготовления рецепта '
+                              'обязательно для создания рецепта.')
 INGREDIENT_DUPLICATES: str = 'Ингредиенты должны быть уникальными: {}.'
 TAG_DUPLICATES: str = 'Теги должны быть уникальными: {}.'
 INGREDIENT_DOES_NOT_EXIST: str = 'Ингредиент "{ingredient_id}" не существует.'

@@ -17,7 +17,14 @@ class Base64ImageField(serializers.ImageField):
         return super().to_internal_value(data)
 
 
-def get_or_create_object(main_model, related_model, user, request, id, message):
+def get_or_create_object(
+        main_model,
+        related_model,
+        user,
+        request,
+        id,
+        message
+):
     obj = get_object_or_404(main_model, id=id)
     instance, created = related_model.objects.get_or_create(
         user=user,
