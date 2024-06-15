@@ -16,13 +16,13 @@ class Command(BaseCommand):
         file_path = options['file_path']
 
         if not os.path.exists(file_path):
-            raise CommandError(f"File '{file_path}' does not exist")
+            raise CommandError(f'File "{file_path}" does not exist')
 
         with open(file_path, 'r', encoding='utf-8') as file:
             reader = csv.reader(file)
             for row in reader:
                 if len(row) != 2:
-                    self.stdout.write(self.style.WARNING(f"Skipping invalid row: {row}"))
+                    self.stdout.write(self.style.WARNING(f'Skipping invalid row: {row}'))
                     continue
 
                 name, measurement_unit = row
@@ -32,6 +32,6 @@ class Command(BaseCommand):
                 )
 
                 if created:
-                    self.stdout.write(self.style.SUCCESS(f"Ingredient '{name}' created successfully"))
+                    self.stdout.write(self.style.SUCCESS(f'Ingredient "{name}" created successfully'))
                     continue
-                self.stdout.write(self.style.WARNING(f"Ingredient '{name}' already exists"))
+                self.stdout.write(self.style.WARNING(f'Ingredient "{name}" already exists'))

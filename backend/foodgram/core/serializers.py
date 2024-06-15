@@ -68,42 +68,42 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         ingredients_data = self.context['request'].data.get('ingredients')
         if not ingredients_data:
-            raise serializers.ValidationError("Ingredients data is required.")
+            raise serializers.ValidationError('Ingredients data is required.')
 
         for ingredient in ingredients_data:
             amount = ingredient.get('amount')
             if not amount or amount == 0:
-                raise serializers.ValidationError("Amount cannot be 0.")
+                raise serializers.ValidationError('Amount cannot be 0.')
 
         cooking_time = self.context['request'].data.get('cooking_time')
         if not cooking_time or cooking_time == 0:
-            raise serializers.ValidationError("Cooking time cannot be 0.")
+            raise serializers.ValidationError('Cooking time cannot be 0.')
 
         ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
         duplicate_ingredients = [id for id, count in Counter(ingredient_ids).items() if count > 1]
         if duplicate_ingredients:
             raise serializers.ValidationError(
-                f"Duplicate ingredients found: {', '.join(map(str, duplicate_ingredients))}")
+                f'Duplicate ingredients found: {', '.join(map(str, duplicate_ingredients))}')
 
         tags_data = self.context['request'].data.get('tags')
         if not tags_data:
-            raise serializers.ValidationError("Tags data is required.")
+            raise serializers.ValidationError('Tags data is required.')
 
         duplicate_tags = [id for id, count in Counter(tags_data).items() if count > 1]
         if duplicate_tags:
             raise serializers.ValidationError(
-                f"Duplicate tags found: {', '.join(map(str, duplicate_tags))}")
+                f'Duplicate tags found: {', '.join(map(str, duplicate_tags))}')
 
         for ingredient_data in ingredients_data:
             ingredient_id = ingredient_data.get('id')
             if not Ingredient.objects.filter(id=ingredient_id).exists():
                 raise serializers.ValidationError(
-                    f"Ingredient with id {ingredient_id} does not exist.")
+                    f'Ingredient with id {ingredient_id} does not exist.')
 
         for tag_id in tags_data:
             if not Tag.objects.filter(id=tag_id).exists():
                 raise serializers.ValidationError(
-                    f"Tag with id {tag_id} does not exist.")
+                    f'Tag with id {tag_id} does not exist.')
 
         return attrs
 
@@ -115,7 +115,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         validated_data.pop('recipe_ingredients', None)
 
         if not request.user.is_authenticated:
-            raise AuthenticationFailed("You must be authenticated to create a recipe.")
+            raise AuthenticationFailed('You must be authenticated to create a recipe.')
 
         validated_data['author'] = request.user
 
@@ -142,7 +142,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
 
         if ingredients_data is None:
-            raise serializers.ValidationError("Ingredients data is required.")
+            raise serializers.ValidationError('Ingredients data is required.')
 
         instance.recipe_ingredients.all().delete()
 

@@ -39,6 +39,6 @@ class Command(BaseCommand):
             )
 
             if created:
-                self.stdout.write(self.style.SUCCESS(f"Ingredient '{name}' created successfully"))
+                self.stdout.write(self.style.SUCCESS(f'Ingredient "{name}" created successfully'))
                 continue
-            self.stdout.write(self.style.WARNING(f"Ingredient '{name}' already exists"))
+            self.stdout.write(self.style.WARNING(f'Ingredient "{name}" already exists'))
