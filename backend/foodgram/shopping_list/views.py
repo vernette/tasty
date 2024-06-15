@@ -2,82 +2,120 @@ import json
 from collections import defaultdict
 from math import ceil
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 
 from core.models import Recipe, RecipeIngredient
-from .models import ShoppingCart
+from foodgram.utils import (
+    delete_object, get_or_create_object, get_user_shopping_cart_items
+)
+from shopping_list.models import ShoppingCart
 
 
-class RecipeShoppingCartAPIView(APIView):
-    def get_serializer_context(self):
-        return {'request': self.request}
+def get_user_items(request):
+    return get_user_shopping_cart_items(
+        ShoppingCart,
+        request.user,
+        'Your shopping cart is empty.'
+    )
+
+
+class BaseRecipeAPIView(APIView):
+    main_model = None
+    related_model = None
+    create_message = ''
+    not_found_message = ''
 
     def post(self, request, id):
-        recipe = get_object_or_404(Recipe, id=id)
-        shopping_cart, created = ShoppingCart.objects.get_or_create(user=request.user, recipe=recipe)
-        if created:
-            response_data = {
-                "id": recipe.id,
-                "name": recipe.name,
-                "image": request.build_absolute_uri(recipe.image.url),
-                "cooking_time": recipe.cooking_time
-            }
-            return Response(response_data, status=status.HTTP_201_CREATED)
-        return Response({'message': 'Recipe already in shopping cart.'}, status=status.HTTP_400_BAD_REQUEST)
+        return get_or_create_object(
+            self.main_model,
+            self.related_model,
+            request.user,
+            request,
+            id,
+            self.create_message
+        )
 
     def delete(self, request, id):
-        recipe = get_object_or_404(Recipe, id=id)
-        shopping_cart = ShoppingCart.objects.filter(user=request.user, recipe=recipe).first()
-        if shopping_cart:
-            shopping_cart.delete()
-            return Response({'message': 'Recipe removed from shopping cart.'}, status=status.HTTP_204_NO_CONTENT)
-        return Response({'errors': 'Recipe not found in shopping cart.'}, status=status.HTTP_400_BAD_REQUEST)
+        return delete_object(
+            self.main_model,
+            self.related_model,
+            request.user,
+            id,
+            self.not_found_message
+        )
+
+
+class RecipeShoppingCartAPIView(BaseRecipeAPIView):
+    main_model = Recipe
+    related_model = ShoppingCart
+    create_message = 'Recipe already in shopping cart.'
+    not_found_message = 'Recipe not found in shopping cart.'
 
 
 class DownloadShoppingCartTXTView(APIView):
     def get(self, request):
-        shopping_cart_items = ShoppingCart.objects.filter(user=request.user).select_related('recipe')
-
-        if not shopping_cart_items.exists():
-            return Response({'errors': 'Your shopping cart is empty.'}, status=status.HTTP_400_BAD_REQUEST)
+        shopping_cart_items = get_user_items(request)
 
         ingredients_dict = defaultdict(int)
 
         for item in shopping_cart_items:
             recipe = item.recipe
             for ingredient in recipe.ingredients.all():
-                amount = RecipeIngredient.objects.get(recipe=recipe, ingredient=ingredient).amount
+                amount = RecipeIngredient.objects.get(
+                    recipe=recipe,
+                    ingredient=ingredient
+                ).amount
                 amount_int = int(ceil(amount))
-                ingredients_dict[(ingredient.name, ingredient.measurement_unit)] += amount_int
+                ingredients_dict[
+                    (
+                        ingredient.name,
+                        ingredient.measurement_unit
+                    )
+                ] += amount_int
 
         content = ""
         for ingredient, amount in ingredients_dict.items():
             content += f"{ingredient[0]} ({ingredient[1]}) — {amount}\n"
 
         response = HttpResponse(content, content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename="shopping_cart.txt"'
+        response['Content-Disposition'] = ('attachment; '
+                                           'filename="shopping_cart.txt"')
         return response
 
 
-# TODO Изменить вывод
 class DownloadShoppingCartJSONView(APIView):
     def get(self, request):
-        shopping_cart_items = ShoppingCart.objects.filter(user=request.user).select_related('recipe')
-
-        if not shopping_cart_items.exists():
-            return Response({'errors': 'Your shopping cart is empty.'}, status=status.HTTP_400_BAD_REQUEST)
+        shopping_cart_items = get_user_items(request)
 
         shopping_list = []
         for item in shopping_cart_items:
             recipe = item.recipe
-            ingredients_list = [{'name': ingredient.name, 'measurement_unit': ingredient.measurement_unit, 'amount': RecipeIngredient.objects.get(recipe=recipe, ingredient=ingredient).amount} for ingredient in recipe.ingredients.all()]
-            shopping_list.append({'recipe_name': recipe.name, 'ingredients': ingredients_list})
+            ingredients_list = [
+                {
+                    'name': ingredient.name,
+                    'measurement_unit': ingredient.measurement_unit,
+                    'amount': RecipeIngredient.objects.get(
+                        recipe=recipe, ingredient=ingredient
+                    ).amount
+                } for ingredient in recipe.ingredients.all()
+            ]
+            shopping_list.append(
+                {
+                    'recipe_name': recipe.name,
+                    'ingredients': ingredients_list
+                }
+            )
 
-        response_data = json.dumps(shopping_list, ensure_ascii=False, indent=4)
-        response = HttpResponse(response_data, content_type='application/json')
-        response['Content-Disposition'] = 'attachment; filename="shopping_cart.json"'
+        response_data = json.dumps(
+            shopping_list,
+            ensure_ascii=False,
+            indent=4
+        )
+        response = HttpResponse(
+            response_data,
+            content_type='application/json'
+        )
+        response['Content-Disposition'] = ('attachment; '
+                                           'filename="shopping_cart.json"')
         return response
