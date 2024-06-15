@@ -10,7 +10,14 @@ from core.serializers import Base64ImageField
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = CustomUser
-        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'password')
+        fields = (
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password'
+        )
 
 
 class UserAvatarSerializer(serializers.ModelSerializer):
@@ -44,7 +51,15 @@ class BaseCustomUserSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         model = CustomUser
-        fields = UserSerializer.Meta.fields + ('email', 'id', 'username', 'first_name', 'last_name', 'is_subscribed', 'avatar')
+        fields = UserSerializer.Meta.fields + (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'avatar'
+        )
 
 
 class CustomCurrentUserSerializer(BaseCustomUserSerializer):
@@ -54,7 +69,9 @@ class CustomCurrentUserSerializer(BaseCustomUserSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         if not request.user.is_authenticated:
-            raise NotAuthenticated('Authentication credentials were not provided.')
+            raise NotAuthenticated(
+                'Authentication credentials were not provided.'
+            )
         return super().to_representation(instance)
 
 
