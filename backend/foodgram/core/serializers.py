@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from core.models import Recipe, RecipeIngredient, Ingredient, Tag
 from users.models import UserAvatar
-from core.utils import Base64ImageField
+from foodgram.utils import Base64ImageField
 from users.serializers import BaseCustomUserSerializer
 
 

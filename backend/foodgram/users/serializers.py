@@ -4,7 +4,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 
 from .models import CustomUser, UserAvatar
 from subscriptions.models import Subscription
-from core.serializers import Base64ImageField
+from foodgram.utils import Base64ImageField
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
