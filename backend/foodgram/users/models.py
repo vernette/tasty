@@ -36,7 +36,3 @@ class UserAvatar(models.Model):
         null=True,
         blank=True
     )
-
-    class Meta:
-        verbose_name = 'Аватар'
-        verbose_name_plural = 'Аватары'
