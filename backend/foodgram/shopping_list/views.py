@@ -88,7 +88,8 @@ class DownloadShoppingCartTXTView(APIView):
 
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = (f'attachment; '
-                                           f'filename="{SHOPPING_LIST_TXT_FILENAME}"')
+                                           f'filename="'
+                                           f'{SHOPPING_LIST_TXT_FILENAME}"')
         return response
 
 
@@ -113,10 +114,12 @@ class DownloadShoppingCartPDFView(APIView):
                     )
                 ] += amount_int
 
-        html_content = "<html><head><meta charset='UTF-8'><title>Список покупок</title></head><body>"
+        html_content = ("<html><head><meta charset='UTF-8'>"
+                        "<title>Список покупок</title></head><body>")
         html_content += "<h1>Список покупок</h1><ul>"
         for ingredient, amount in ingredients_dict.items():
-            html_content += f"<li>{ingredient[0]} ({ingredient[1]}) — {amount}</li>"
+            html_content += (f"<li>{ingredient[0]} "
+                             f"({ingredient[1]}) — {amount}</li>")
         html_content += "</ul></body></html>"
 
         # Генерация PDF из HTML
@@ -124,5 +127,6 @@ class DownloadShoppingCartPDFView(APIView):
 
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = (f'attachment; '
-                                           f'filename="{SHOPPING_LIST_PDF_FILENAME}"')
+                                           f'filename="'
+                                           f'{SHOPPING_LIST_PDF_FILENAME}"')
         return response
