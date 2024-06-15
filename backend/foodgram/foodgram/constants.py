@@ -32,8 +32,8 @@ SUBSCRIPTION_NOT_FOUND: str = 'Вы не подписаны.'
 NOT_AUTHENTICATED: str = 'Войдите в аккаунт для совершения этого действия.'
 
 # Import
-IMPORT_INGREDIENTS_FROM_CSV = 'Импортировать ингредиенты из CSV.'
-CSV_FILE_PATH = 'Путь к CSV-файлу.'
-FILE_DOES_NOT_EXIST = 'Файл "{file_path}" не существует.'
-IMPORT_SUCCESS = 'Ингредиент "{name}" успешно импортирован.'
-INGREDIENT_EXISTS = 'Ингредиент "{name}" уже существует.'
+IMPORT_INGREDIENTS_FROM_CSV: str = 'Импортировать ингредиенты из CSV.'
+CSV_FILE_PATH: str = 'Путь к CSV-файлу.'
+FILE_DOES_NOT_EXIST: str = 'Файл "{file_path}" не существует.'
+IMPORT_SUCCESS: str = 'Ингредиент "{name}" успешно импортирован.'
+INGREDIENT_EXISTS: str = 'Ингредиент "{name}" уже существует.'
