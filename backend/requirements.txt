@@ -5,3 +5,4 @@ djoser==2.1.0
 Pillow==9.0.0
 shortener==0.2.1
 django-filter==23.5
+pdfkit==1.0.0

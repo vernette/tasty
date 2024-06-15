@@ -379,9 +379,9 @@ class Api {
     }).then(this.checkFileDownloadResponse);
   }
 
-  downloadJsonFile() {
+  downloadPDFFile() {
     const token = localStorage.getItem("token");
-    return fetch(`/api/recipes/download_shopping_cart_json/`, {
+    return fetch(`/api/recipes/download_shopping_cart_pdf/`, {
       method: "GET",
       headers: {
         ...this._headers,

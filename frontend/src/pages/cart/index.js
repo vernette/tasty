@@ -74,13 +74,13 @@ const Cart = ({ updateOrders, orders }) => {
       });
   }
 
-  const downloadJsonDocument = () => {
-    api.downloadJsonFile()
+  const downloadPDFDocument = () => {
+    api.downloadPDFFile()
       .then(response => {
         if (response.ok) {
           return response.blob().then(blob => {
             const url = window.URL.createObjectURL(blob);
-            downloadFileFromUrl(url, 'shopping_cart.json');
+            downloadFileFromUrl(url, 'shopping_cart.pdf');
           });
         } else {
           throw new Error('Ошибка при загрузке файла');
@@ -116,9 +116,9 @@ const Cart = ({ updateOrders, orders }) => {
             </Button>
             <Button
               modifier='style_dark'
-              clickHandler={downloadJsonDocument}
+              clickHandler={downloadPDFDocument}
             >
-              json
+              pdf
             </Button>
           </div>
         )}

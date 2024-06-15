@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from favorites.views import RecipeFavoriteAPIView
 from shopping_list.views import (
-    DownloadShoppingCartTXTView, RecipeShoppingCartAPIView
+    DownloadShoppingCartTXTView, RecipeShoppingCartAPIView,
+    DownloadShoppingCartPDFView
 )
 from core.views import IngredientViewSet, RecipeViewSet, TagViewSet
 
@@ -18,6 +19,11 @@ urlpatterns = [
         'recipes/download_shopping_cart/',
         DownloadShoppingCartTXTView.as_view(),
         name='download-shopping-cart'
+    ),
+    path(
+        'recipes/download_shopping_cart_pdf/',
+        DownloadShoppingCartPDFView.as_view(),
+        name='download-shopping-cart-pdf'
     ),
     path(
         'recipes/<int:id>/favorite/',

@@ -1,6 +1,7 @@
 from collections import defaultdict
 from math import ceil
 
+import pdfkit
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework import status
@@ -9,7 +10,7 @@ from rest_framework.response import Response
 from core.models import Recipe, RecipeIngredient
 from foodgram.constants import (
     SHOPPING_LIST_ALREADY_EXISTS, SHOPPING_LIST_NOT_FOUND,
-    SHOPPING_LIST_TXT_FILENAME
+    SHOPPING_LIST_TXT_FILENAME, SHOPPING_LIST_PDF_FILENAME
 )
 from foodgram.utils import (
     delete_object, get_or_create_object, get_user_shopping_cart_items
@@ -88,4 +89,40 @@ class DownloadShoppingCartTXTView(APIView):
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = (f'attachment; '
                                            f'filename="{SHOPPING_LIST_TXT_FILENAME}"')
+        return response
+
+
+class DownloadShoppingCartPDFView(APIView):
+    def get(self, request):
+        shopping_cart_items = get_user_items(request)
+
+        ingredients_dict = defaultdict(int)
+
+        for item in shopping_cart_items:
+            recipe = item.recipe
+            for ingredient in recipe.ingredients.all():
+                amount = RecipeIngredient.objects.get(
+                    recipe=recipe,
+                    ingredient=ingredient
+                ).amount
+                amount_int = int(ceil(amount))
+                ingredients_dict[
+                    (
+                        ingredient.name,
+                        ingredient.measurement_unit
+                    )
+                ] += amount_int
+
+        html_content = "<html><head><meta charset='UTF-8'><title>Список покупок</title></head><body>"
+        html_content += "<h1>Список покупок</h1><ul>"
+        for ingredient, amount in ingredients_dict.items():
+            html_content += f"<li>{ingredient[0]} ({ingredient[1]}) — {amount}</li>"
+        html_content += "</ul></body></html>"
+
+        # Генерация PDF из HTML
+        pdf = pdfkit.from_string(html_content, False)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = (f'attachment; '
+                                           f'filename="{SHOPPING_LIST_PDF_FILENAME}"')
         return response
