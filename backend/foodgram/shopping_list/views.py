@@ -122,7 +122,6 @@ class DownloadShoppingCartPDFView(APIView):
                              f"({ingredient[1]}) — {amount}</li>")
         html_content += "</ul></body></html>"
 
-        # Генерация PDF из HTML
         pdf = pdfkit.from_string(html_content, False)
 
         response = HttpResponse(pdf, content_type='application/pdf')
