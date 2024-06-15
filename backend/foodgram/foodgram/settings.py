@@ -1,13 +1,22 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-pm$w9rz-p!=**rbr(6@*lo29@b6t1%pu(1op)cjd=5=do-yfg$'
+load_dotenv()
 
-DEBUG = True
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY',
+    get_random_secret_key()
+)
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
+
+ALLOWED_HOSTS = ['foodgram-public.zapto.org']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,8 +70,12 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
 
