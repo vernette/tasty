@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from core.models import Ingredient
 from foodgram.constants import (
-    IMPORT_INGREDIENTS_FROM_CSV, CSV_FILE_PATH, IMPORT_SUCCESS,
+    IMPORT_INGREDIENTS_FROM_CSV, FILE_PATH, IMPORT_SUCCESS,
     INGREDIENT_EXISTS, FILE_DOES_NOT_EXIST
 )
 
@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = IMPORT_INGREDIENTS_FROM_CSV
 
     def add_arguments(self, parser):
-        parser.add_argument('file_path', type=str, help=CSV_FILE_PATH)
+        parser.add_argument('file_path', type=str, help=FILE_PATH)
 
     def handle(self, *args, **options):
         file_path = options['file_path']

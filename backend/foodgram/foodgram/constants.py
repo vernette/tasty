@@ -36,7 +36,9 @@ NOT_AUTHENTICATED: str = 'Войдите в аккаунт для соверше
 
 # Import
 IMPORT_INGREDIENTS_FROM_CSV: str = 'Импортировать ингредиенты из CSV.'
-CSV_FILE_PATH: str = 'Путь к CSV-файлу.'
+IMPORT_INGREDIENTS_FROM_JSON: str = 'Импортировать ингредиенты из JSON.'
+JSON_INVALID: str = 'Файл {file_path} не является валидным JSON.'
+FILE_PATH: str = 'Путь к файлу.'
 FILE_DOES_NOT_EXIST: str = 'Файл "{file_path}" не существует.'
 IMPORT_SUCCESS: str = 'Ингредиент "{name}" успешно импортирован.'
 INGREDIENT_EXISTS: str = 'Ингредиент "{name}" уже существует.'
