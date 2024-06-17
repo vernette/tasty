@@ -38,7 +38,7 @@ class BaseCustomUserSerializer(UserSerializer):
         if not request:
             return None
 
-        user_avatar = UserAvatar.objects.filter(user=obj).last()
+        user_avatar = getattr(obj, 'avatar', None)
         if user_avatar and user_avatar.avatar:
             return request.build_absolute_uri(user_avatar.avatar.url)
         return None
@@ -46,8 +46,7 @@ class BaseCustomUserSerializer(UserSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return Subscription.objects.filter(user=request.user,
-                                               author=obj).exists()
+            return obj.subscribers.filter(user=request.user).exists()
         return False
 
     class Meta(UserSerializer.Meta):
