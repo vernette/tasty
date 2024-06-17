@@ -3,7 +3,6 @@ from rest_framework.exceptions import NotAuthenticated
 from djoser.serializers import UserCreateSerializer, UserSerializer
 
 from users.models import CustomUser, UserAvatar
-from subscriptions.models import Subscription
 from foodgram.constants import NOT_AUTHENTICATED
 from foodgram.utils import Base64ImageField
 

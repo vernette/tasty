@@ -2,8 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from core.models import Recipe
-from users.models import UserAvatar
-from subscriptions.models import Subscription
 
 
 User = get_user_model()
@@ -30,7 +28,10 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField(source='recipes.count', read_only=True)
+    recipes_count = serializers.IntegerField(
+        source='recipes.count',
+        read_only=True
+    )
     avatar = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
 
