@@ -116,7 +116,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(INGREDIENTS_DATA_REQUIRED)
 
         ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
-        duplicate_ingredients = [id for id, count in Counter(ingredient_ids).items() if count > 1]
+        duplicate_ingredients = [
+            id for id, count in Counter(ingredient_ids).items() if count > 1
+        ]
         if duplicate_ingredients:
             raise serializers.ValidationError(
                 INGREDIENT_DUPLICATES.format(
