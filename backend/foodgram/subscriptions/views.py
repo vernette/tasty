@@ -72,9 +72,6 @@ class SubscriptionListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        subscriptions = Subscription.objects.filter(
-            user=user
-        ).select_related('author')
         return User.objects.filter(
-            id__in=subscriptions.values('author_id')
+            id__in=user.subscriptions.values('author_id')
         )
