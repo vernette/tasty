@@ -80,6 +80,7 @@ class Ingredient(BaseModel):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
@@ -120,6 +121,7 @@ class Tag(BaseModel):
     )
 
     class Meta:
+        ordering = ['-id']
         unique_together = ('name', 'slug')
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
