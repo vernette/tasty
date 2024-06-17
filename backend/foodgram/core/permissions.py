@@ -18,7 +18,7 @@ class IsAuthenticatedAndReadOnly(BasePermission):
 
 class ReadOnlyOrAdmin(BasePermission):
     def has_permission(self, request, view):
-        if request.method in ['POST', 'PUT', 'PATCH', 'DELETE'] and not request.user.is_staff:
+        if request.method not in SAFE_METHODS and not request.user.is_staff:
             raise MethodNotAllowed(request.method)
         return True
 
