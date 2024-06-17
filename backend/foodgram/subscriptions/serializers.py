@@ -30,7 +30,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.IntegerField(source='recipes.count', read_only=True)
     avatar = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
 
@@ -50,19 +50,16 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, obj):
         request = self.context.get('request')
-        recipes = Recipe.objects.filter(author=obj)
+        recipes = obj.recipes.all()
         return ShortRecipeSerializer(
             recipes,
             many=True,
             context={'request': request}
         ).data
 
-    def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj).count()
-
     def get_avatar(self, obj):
         request = self.context.get('request')
-        user_avatar = UserAvatar.objects.filter(user=obj).last()
+        user_avatar = getattr(obj, 'avatar', None)
         if user_avatar and user_avatar.avatar:
             return request.build_absolute_uri(user_avatar.avatar.url)
         return None
@@ -70,10 +67,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return Subscription.objects.filter(
-                user=request.user,
-                author=obj
-            ).exists()
+            return obj.subscribers.filter(user=request.user).exists()
         return False
 
     def to_representation(self, instance):
