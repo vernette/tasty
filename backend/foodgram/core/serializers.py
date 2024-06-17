@@ -2,14 +2,19 @@ from collections import Counter
 
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import serializers
+from django.db import transaction
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from core.models import Recipe, RecipeIngredient, Ingredient, Tag
 from users.models import UserAvatar
 from foodgram.constants import (
     INGREDIENTS_DATA_REQUIRED, TAGS_DATA_REQUIRED, AMOUNT_REQUIRED,
     COOKING_TIME_REQUIRED, INGREDIENT_DUPLICATES, TAG_DUPLICATES,
-    INGREDIENT_DOES_NOT_EXIST, TAG_DOES_NOT_EXIST, NOT_AUTHENTICATED
+    INGREDIENT_DOES_NOT_EXIST, TAG_DOES_NOT_EXIST, NOT_AUTHENTICATED,
+    MIN_AMOUNT, MAX_AMOUNT, MIN_AMOUNT_ERROR, MAX_AMOUNT_ERROR,
+    MIN_COOKING_TIME, MAX_COOKING_TIME, MIN_COOKING_TIME_ERROR,
+    MAX_COOKING_TIME_ERROR
 )
 from foodgram.utils import Base64ImageField
 from users.serializers import BaseCustomUserSerializer
@@ -30,7 +35,18 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit'
     )
-    amount = serializers.IntegerField()
+    amount = serializers.IntegerField(
+        validators=[
+            MinValueValidator(
+                MIN_AMOUNT,
+                message=MIN_AMOUNT_ERROR
+            ),
+            MaxValueValidator(
+                MAX_AMOUNT,
+                message=MAX_AMOUNT_ERROR
+            )
+        ]
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -60,6 +76,18 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    cooking_time = serializers.IntegerField(
+        validators=[
+            MinValueValidator(
+                MIN_COOKING_TIME,
+                message=MIN_COOKING_TIME_ERROR
+            ),
+            MaxValueValidator(
+                MAX_COOKING_TIME,
+                message=MAX_COOKING_TIME_ERROR
+            )
+        ]
+    )
 
     class Meta:
         model = Recipe
@@ -78,39 +106,22 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         ingredients_data = self.context['request'].data.get('ingredients')
+        tags_data = self.context['request'].data.get('tags')
+        self.validate_ingredients(ingredients_data)
+        self.validate_tags(tags_data)
+        return attrs
+
+    def validate_ingredients(self, ingredients_data):
         if not ingredients_data:
             raise serializers.ValidationError(INGREDIENTS_DATA_REQUIRED)
 
-        for ingredient in ingredients_data:
-            amount = ingredient.get('amount')
-            if not amount or amount == 0:
-                raise serializers.ValidationError(AMOUNT_REQUIRED)
-
-        cooking_time = self.context['request'].data.get('cooking_time')
-        if not cooking_time or cooking_time == 0:
-            raise serializers.ValidationError(COOKING_TIME_REQUIRED)
-
         ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
-        duplicate_ingredients = [
-            id for id, count in Counter(ingredient_ids).items() if count > 1
-        ]
+        duplicate_ingredients = [id for id, count in Counter(ingredient_ids).items() if count > 1]
         if duplicate_ingredients:
             raise serializers.ValidationError(
                 INGREDIENT_DUPLICATES.format(
                     ', '.join(map(str, duplicate_ingredients))
                 )
-            )
-
-        tags_data = self.context['request'].data.get('tags')
-        if not tags_data:
-            raise serializers.ValidationError(TAGS_DATA_REQUIRED)
-
-        duplicate_tags = [
-            id for id, count in Counter(tags_data).items() if count > 1
-        ]
-        if duplicate_tags:
-            raise serializers.ValidationError(
-                TAG_DUPLICATES.format(', '.join(map(str, duplicate_tags)))
             )
 
         for ingredient_data in ingredients_data:
@@ -122,13 +133,25 @@ class RecipeSerializer(serializers.ModelSerializer):
                     )
                 )
 
+    def validate_tags(self, tags_data):
+        if not tags_data:
+            raise serializers.ValidationError(TAGS_DATA_REQUIRED)
+
+        duplicate_tags = [
+            id for id, count in Counter(tags_data).items() if count > 1
+        ]
+        if duplicate_tags:
+            raise serializers.ValidationError(
+                TAG_DUPLICATES.format(
+                    ', '.join(map(str, duplicate_tags))
+                )
+            )
+
         for tag_id in tags_data:
             if not Tag.objects.filter(id=tag_id).exists():
                 raise serializers.ValidationError(
                     TAG_DOES_NOT_EXIST.format(tag_id=tag_id)
                 )
-
-        return attrs
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -142,21 +165,22 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         validated_data['author'] = request.user
 
-        recipe = super().create(validated_data)
+        with transaction.atomic():
+            recipe = super().create(validated_data)
 
-        if tags_data:
-            tags = Tag.objects.filter(id__in=tags_data)
-            recipe.tags.set(tags)
+            if tags_data:
+                tags = Tag.objects.filter(id__in=tags_data)
+                recipe.tags.set(tags)
 
-        for ingredient_data in ingredients_data:
-            ingredient_id = ingredient_data.get('id')
-            amount = ingredient_data.get('amount')
-            ingredient = Ingredient.objects.get(id=ingredient_id)
-            RecipeIngredient.objects.create(
-                recipe=recipe,
-                ingredient=ingredient,
-                amount=amount
-            )
+            recipe_ingredients = [
+                RecipeIngredient(
+                    recipe=recipe,
+                    ingredient_id=ingredient_data['id'],
+                    amount=ingredient_data['amount']
+                )
+                for ingredient_data in ingredients_data
+            ]
+            RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
         return recipe
 
@@ -164,28 +188,25 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         tags_data = request.data.get('tags')
         ingredients_data = request.data.get('ingredients')
-
         validated_data.pop('ingredients', None)
         instance = super().update(instance, validated_data)
 
-        if ingredients_data is None:
-            raise serializers.ValidationError(INGREDIENTS_DATA_REQUIRED)
+        with transaction.atomic():
+            instance.recipe_ingredients.all().delete()
 
-        instance.recipe_ingredients.all().delete()
+            if tags_data:
+                tags = Tag.objects.filter(id__in=tags_data)
+                instance.tags.set(tags)
 
-        if tags_data:
-            tags = Tag.objects.filter(id__in=tags_data)
-            instance.tags.set(tags)
-
-        for ingredient_data in ingredients_data:
-            ingredient_id = ingredient_data.get('id')
-            amount = ingredient_data.get('amount')
-            ingredient = Ingredient.objects.get(id=ingredient_id)
-            RecipeIngredient.objects.create(
-                recipe=instance,
-                ingredient=ingredient,
-                amount=amount
-            )
+            recipe_ingredients = [
+                RecipeIngredient(
+                    recipe=instance,
+                    ingredient_id=ingredient_data['id'],
+                    amount=ingredient_data['amount']
+                )
+                for ingredient_data in ingredients_data
+            ]
+            RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
         return instance
 
