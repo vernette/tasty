@@ -10,24 +10,26 @@ from core.serializers import (
 )
 
 from core.filters import IngredientFilter, RecipeFilter
-from core.mixins import ReadOnlyOrAdminMixin
 from core.pagination import CustomPageNumberPagination
 from core.permissions import (
-    IsAuthenticatedAndReadOnly, IsOwnerOrAdminOrReadOnly
+    IsAuthenticatedAndReadOnly, IsOwnerOrAdminOrReadOnly,
+    ReadOnlyOrAdmin
 )
 
 
-class IngredientViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
+class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = [ReadOnlyOrAdmin]
     pagination_class = None
     filter_backends = [DjangoFilterBackend]
     filterset_class = IngredientFilter
 
 
-class TagViewSet(ReadOnlyOrAdminMixin, viewsets.ModelViewSet):
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = [ReadOnlyOrAdmin]
     pagination_class = None
 
 
