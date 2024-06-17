@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from foodgram.constants import (
-    NAME_MAX_LENGTH, MEASUREMENT_UNIT_MAX_LENGTH
+    NAME_MAX_LENGTH, MEASUREMENT_UNIT_MAX_LENGTH, MIN_COOKING_TIME,
+    MAX_COOKING_TIME, MIN_COOKING_TIME_ERROR, MAX_COOKING_TIME_ERROR,
+    MIN_AMOUNT, MAX_AMOUNT, MIN_AMOUNT_ERROR, MAX_AMOUNT_ERROR
 )
 
 
@@ -15,11 +18,11 @@ class BaseModel(models.Model):
         max_length=NAME_MAX_LENGTH
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return self.name
 
 
 class Recipe(BaseModel):
@@ -50,7 +53,19 @@ class Recipe(BaseModel):
         verbose_name='Теги',
         related_name='recipes'
     )
-    cooking_time = models.PositiveSmallIntegerField('Время приготовления')
+    cooking_time = models.PositiveSmallIntegerField(
+        'Время приготовления',
+        validators=[
+            MinValueValidator(
+                MIN_COOKING_TIME,
+                message=MIN_COOKING_TIME_ERROR
+            ),
+            MaxValueValidator(
+                MAX_COOKING_TIME,
+                message=MAX_COOKING_TIME_ERROR
+            )
+        ]
+    )
 
     class Meta:
         ordering = ['-id']
@@ -79,7 +94,20 @@ class RecipeIngredient(models.Model):
         verbose_name='Ингредиент',
         on_delete=models.CASCADE
     )
-    amount = models.PositiveSmallIntegerField('Количество')
+    amount = models.PositiveSmallIntegerField(
+        'Количество',
+        validators=[
+            MinValueValidator(
+                MIN_AMOUNT,
+                message=MIN_AMOUNT_ERROR
+            ),
+            MaxValueValidator(
+                MAX_AMOUNT,
+                message=MAX_AMOUNT_ERROR
+            )
+        ]
+    )
+    )
 
     class Meta:
         default_related_name = 'recipe_ingredients'

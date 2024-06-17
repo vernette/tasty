@@ -1,6 +1,18 @@
 # Models
 NAME_MAX_LENGTH: int = 256
 MEASUREMENT_UNIT_MAX_LENGTH: int = 64
+MIN_COOKING_TIME: int = 1
+MAX_COOKING_TIME: int = 32000
+MIN_COOKING_TIME_ERROR: str = ('Время приготовления не может быть '
+                               'меньше {} минуты.')
+MAX_COOKING_TIME_ERROR: str = ('Время приготовления не может быть '
+                               'больше {} минуты.')
+MIN_AMOUNT: int = 1
+MAX_AMOUNT: int = 32000
+MIN_AMOUNT_ERROR: str = ('Количество ингредиента не может быть '
+                         'меньше {} штук.')
+MAX_AMOUNT_ERROR: str = ('Количество ингредиента не может быть '
+                         'больше {} штук.')
 
 # Core
 INGREDIENTS_DATA_REQUIRED: str = ('Ингредиенты '
