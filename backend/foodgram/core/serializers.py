@@ -1,5 +1,3 @@
-from collections import Counter
-
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import serializers
 from django.db import transaction
@@ -145,60 +143,44 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        tags_data = request.data.get('tags')
         ingredients_data = request.data.get('ingredients')
-
         validated_data.pop('recipe_ingredients', None)
 
         if not request.user.is_authenticated:
             raise AuthenticationFailed(NOT_AUTHENTICATED)
 
         validated_data['author'] = request.user
-
-        with transaction.atomic():
-            recipe = super().create(validated_data)
-
-            if tags_data:
-                tags = Tag.objects.filter(id__in=tags_data)
-                recipe.tags.set(tags)
-
-            recipe_ingredients = [
-                RecipeIngredient(
-                    recipe=recipe,
-                    ingredient_id=ingredient_data['id'],
-                    amount=ingredient_data['amount']
-                )
-                for ingredient_data in ingredients_data
-            ]
-            RecipeIngredient.objects.bulk_create(recipe_ingredients)
-
-        return recipe
+        return self.save_recipe(validated_data, ingredients_data)
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
-        tags_data = request.data.get('tags')
         ingredients_data = request.data.get('ingredients')
         validated_data.pop('ingredients', None)
         instance = super().update(instance, validated_data)
+        return self.save_recipe(validated_data, ingredients_data, instance)
 
+    def save_recipe(self, validated_data, ingredients_data, instance=None):
         with transaction.atomic():
-            instance.recipe_ingredients.all().delete()
+            if instance:
+                instance.recipe_ingredients.all().delete()
 
-            if tags_data:
-                tags = Tag.objects.filter(id__in=tags_data)
-                instance.tags.set(tags)
+            recipe = (
+                super().create(validated_data)
+                if not instance else instance
+            )
 
-            recipe_ingredients = [
-                RecipeIngredient(
-                    recipe=instance,
-                    ingredient_id=ingredient_data['id'],
-                    amount=ingredient_data['amount']
-                )
-                for ingredient_data in ingredients_data
-            ]
-            RecipeIngredient.objects.bulk_create(recipe_ingredients)
+            if ingredients_data:
+                recipe_ingredients = [
+                    RecipeIngredient(
+                        recipe=recipe,
+                        ingredient_id=ingredient_data['id'],
+                        amount=ingredient_data['amount']
+                    )
+                    for ingredient_data in ingredients_data
+                ]
+                RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
-        return instance
+        return recipe
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
