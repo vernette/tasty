@@ -5,5 +5,5 @@ urlpatterns = [
     path('', include('core.urls')),
     path('', include('users.urls')),
     path('', include('subscriptions.urls')),
-    path('auth/', include('djoser_custom_urls'))
+    path('auth/', include('api.djoser_custom_urls'))
 ]
