@@ -114,45 +114,34 @@ class RecipeSerializer(serializers.ModelSerializer):
         if not ingredients_data:
             raise serializers.ValidationError(INGREDIENTS_DATA_REQUIRED)
 
-        ingredient_ids = [ingredient['id'] for ingredient in ingredients_data]
-        duplicate_ingredients = [
-            id for id, count in Counter(ingredient_ids).items() if count > 1
-        ]
-        if duplicate_ingredients:
-            raise serializers.ValidationError(
-                INGREDIENT_DUPLICATES.format(
-                    ', '.join(map(str, duplicate_ingredients))
-                )
-            )
-
+        ingredient_ids = set()
         for ingredient_data in ingredients_data:
-            ingredient_id = ingredient_data.get('id')
+            ingredient_id = ingredient_data['id']
+            if ingredient_id in ingredient_ids:
+                raise serializers.ValidationError(
+                    INGREDIENT_DUPLICATES.format(ingredient_id)
+                )
             if not Ingredient.objects.filter(id=ingredient_id).exists():
                 raise serializers.ValidationError(
-                    INGREDIENT_DOES_NOT_EXIST.format(
-                        ingredient_id=ingredient_id
-                    )
+                    INGREDIENT_DOES_NOT_EXIST.format(ingredient_id)
                 )
+            ingredient_ids.add(ingredient_id)
 
     def validate_tags(self, tags_data):
         if not tags_data:
             raise serializers.ValidationError(TAGS_DATA_REQUIRED)
 
-        duplicate_tags = [
-            id for id, count in Counter(tags_data).items() if count > 1
-        ]
-        if duplicate_tags:
-            raise serializers.ValidationError(
-                TAG_DUPLICATES.format(
-                    ', '.join(map(str, duplicate_tags))
-                )
-            )
-
+        tag_ids = set()
         for tag_id in tags_data:
+            if tag_id in tag_ids:
+                raise serializers.ValidationError(
+                    TAG_DUPLICATES.format(tag_id)
+                )
             if not Tag.objects.filter(id=tag_id).exists():
                 raise serializers.ValidationError(
-                    TAG_DOES_NOT_EXIST.format(tag_id=tag_id)
+                    TAG_DOES_NOT_EXIST.format(tag_id)
                 )
+            tag_ids.add(tag_id)
 
     def create(self, validated_data):
         request = self.context.get('request')
