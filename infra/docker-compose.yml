@@ -8,21 +8,21 @@ volumes:
 
 services:
   backend:
-    container_name: foodgram-backend
+    container_name: tasty-backend
     build: ../backend
     volumes:
       - static:/backend_static
-      - ../backend/foodgram/db.sqlite3:/app/foodgram/db.sqlite3
-      - media:/app/foodgram/media/
+      - ../backend/tasty/db.sqlite3:/app/foodgram/db.sqlite3
+      - media:/app/tasty/media/
   
   frontend:
-    container_name: foodgram-front
+    container_name: tasty-front
     build: ../frontend
     volumes:
       - ../frontend/:/app/result_build/
   
   nginx:
-    container_name: foodgram-proxy
+    container_name: tasty-proxy
     image: nginx:1.25.4-alpine
     ports:
       - 80:80
