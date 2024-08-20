@@ -18,6 +18,8 @@ git clone https://github.com/vernette/tasty
 cd tasty
 ```
 
+### Вручную
+
 Создайте виртуальное окружение и активируйте его:
 
 ```bash
@@ -45,12 +47,22 @@ DJANGO_DEBUG=False
 
 `DJANGO_SECRET_KEY` можно не заполнять вручную, так он будет сгенерирован автоматически.
 
+Запустите проект:
+
+```bash
+python backend/manage.py runserver
+```
+
+### Docker
+
 Перейдите в директорию `infra` и запустите оркестр:
 
 ```bash
 cd infra
 sudo docker compose up
 ```
+
+## Импорт данных
 
 Импортируйте в проект заготовленные данные. Для этого перейдите в директорию `backend/tasty` и выполните команду:
 
