@@ -9,6 +9,6 @@ RUN apt update && apt install wkhtmltopdf -y
 
 COPY . .
 
-WORKDIR /app/foodgram
+WORKDIR /app/tasty
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "foodgram.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "tasty.wsgi"]
