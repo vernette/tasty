@@ -47,6 +47,12 @@ DJANGO_DEBUG=False
 
 `DJANGO_SECRET_KEY` можно не заполнять вручную, так он будет сгенерирован автоматически.
 
+Выполните миграции:
+
+```bash
+python backend/manage.py migrate
+```
+
 Запустите проект:
 
 ```bash
